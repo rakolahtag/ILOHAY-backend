@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\StagiaireController;
+use App\Http\Controllers\ParticipantController;
 
 // Groupe des routes d'authentification
 Route::prefix('auth')->group(function () {
@@ -21,6 +22,10 @@ Route::prefix('auth')->group(function () {
         Route::get('/stagiaires/{id}', [StagiaireController::class, 'show']);
         Route::put('/stagiaires/{id}', [StagiaireController::class, 'update']);
         Route::delete('/stagiaires/{id}', [StagiaireController::class, 'destroy']);
+        Route::get('/participants', [ParticipantController::class, 'index']); // Récupérer tous les participants
+        Route::post('/participants', [ParticipantController::class, 'store']); // Ajouter un participant
+        Route::put('/participants/{id}', [ParticipantController::class, 'update']); // Mettre à jour un participant
+        Route::delete('/participants/{id}', [ParticipantController::class, 'destroy']); // Supprimer un participant
     });
 });
 
