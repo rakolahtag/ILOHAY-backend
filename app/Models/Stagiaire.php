@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Stagiaire extends Model
 {
-    //
     use HasFactory;
 
     protected $fillable = [
@@ -17,5 +16,10 @@ class Stagiaire extends Model
         'telephone',
         'genre',
         'cin',
+        'nationalite',
+        'adresse',
+        'pays_origine',
+        'photo',
+        'niveau_en_classe',
     ];
 }
