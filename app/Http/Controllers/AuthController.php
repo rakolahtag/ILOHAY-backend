@@ -2,73 +2,77 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use App\Models\User;
 
 class AuthController extends Controller
 {
     /**
-     * Inscription d’un utilisateur
+     * Enregistrement d'un utilisateur
      */
     public function register(Request $request)
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'min:6'],
+        $validated = $request->validate([
+            'name'         => 'required|string|max:255',
+            'prenom'       => 'required|string|max:255',
+            'cin'          => 'required|string|max:20|unique:users,cin',
+            'telephone'    => 'required|string|max:20',
+            'adresse'      => 'required|string|max:255',
+            'pays_origine' => 'required|string|max:100',
+            'nationalite'  => 'required|string|max:100',
+            'genre'        => 'required|in:Homme,Femme,Autre',
+            'email'        => 'required|string|email|max:255|unique:users',
+            'password'     => 'required|string|min:6|confirmed',
+            'role'         => 'required|in:stagiaire,participant,formateur', // ⚠️ pas admin ici !
         ]);
 
         $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'name'         => $validated['name'],
+            'prenom'       => $validated['prenom'],
+            'cin'          => $validated['cin'],
+            'telephone'    => $validated['telephone'],
+            'adresse'      => $validated['adresse'],
+            'pays_origine' => $validated['pays_origine'],
+            'nationalite'  => $validated['nationalite'],
+            'genre'        => $validated['genre'],
+            'email'        => $validated['email'],
+            'password'     => Hash::make($validated['password']),
+            'role'         => $validated['role'], // pas admin car bloqué au register
         ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
-
         return response()->json([
-            'message' => 'Inscription réussie',
-            'user' => $user,
-            'token' => $token,
+            'message' => 'Utilisateur créé avec succès',
+            'user'    => $user,
         ], 201);
     }
 
     /**
-     * Connexion d’un utilisateur
+     * Connexion
      */
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
+        $request->validate([
+            'email'    => 'required|string|email',
+            'password' => 'required|string',
         ]);
 
-        if (!Auth::attempt($credentials)) {
+        $user = User::where('email', $request->email)->first();
+
+        if (! $user || ! Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
-                'email' => ['Identifiants incorrects.'],
+                'email' => ['Les identifiants sont incorrects.'],
             ]);
         }
-
-        $user = User::where('email', $credentials['email'])->firstOrFail();
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'message' => 'Connexion réussie',
-            'user' => $user,
-            'token' => $token,
+            'token'   => $token,
+            'user'    => $user, // inclut role, prenom, etc.
         ]);
-    }
-
-    /**
-     * Récupérer les infos de l’utilisateur connecté
-     */
-    public function me(Request $request)
-    {
-        return response()->json($request->user());
     }
 
     /**
@@ -79,7 +83,15 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([
-            'message' => 'Déconnecté avec succès'
+            'message' => 'Déconnexion réussie',
         ]);
+    }
+
+    /**
+     * Récupérer les infos du user connecté
+     */
+    public function me(Request $request)
+    {
+        return response()->json($request->user());
     }
 }

@@ -58,6 +58,30 @@ return [
             'ignore_exceptions' => false,
         ],
 
+        'admin' => [
+        'driver' => 'single',
+        'path' => storage_path('logs/admin.log'),
+        'level' => 'info',
+        ],
+
+        'formateur' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/formateur.log'),
+            'level' => 'info',
+        ],
+
+        'participant' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/participant.log'),
+            'level' => 'info',
+        ],
+        
+        'stagiaire' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/stagiaire.log'),
+            'level' => 'info',
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
