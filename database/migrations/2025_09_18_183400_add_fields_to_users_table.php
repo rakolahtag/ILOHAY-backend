@@ -6,42 +6,57 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('prenom')->nullable()->after('name');
-            $table->string('cin')->nullable()->after('prenom');
-            $table->string('telephone')->nullable()->after('cin');
-            $table->string('adresse')->nullable()->after('telephone');
-            $table->string('pays_origine')->nullable()->after('adresse');
-            $table->string('nationalite')->nullable()->after('pays_origine');
-            $table->enum('genre', ['Homme', 'Femme', 'Autre'])->nullable()->after('nationalite');
-
-            $table->enum('role', ['admin', 'formateur', 'participant', 'stagiaire'])
-                  ->default('participant')
-                  ->after('email'); // 🔒 sécurise : jamais admin par défaut
+            if (!Schema::hasColumn('users', 'prenom')) {
+                $table->string('prenom')->nullable()->after('name');
+            }
+            if (!Schema::hasColumn('users', 'telephone')) {
+                $table->string('telephone')->nullable()->after('prenom');
+            }
+            if (!Schema::hasColumn('users', 'genre')) {
+                $table->enum('genre', ['masculin', 'feminin'])->nullable()->after('telephone');
+            }
+            if (!Schema::hasColumn('users', 'cin')) {
+                $table->string('cin')->nullable()->after('genre');
+            }
+            if (!Schema::hasColumn('users', 'nationalite')) {
+                $table->string('nationalite')->nullable()->after('cin');
+            }
+            if (!Schema::hasColumn('users', 'adresse')) {
+                $table->string('adresse')->nullable()->after('nationalite');
+            }
+            if (!Schema::hasColumn('users', 'paysOrigine')) {
+                $table->string('pays_origine')->nullable()->after('adresse');
+            }
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn([
-                'prenom',
-                'cin',
-                'telephone',
-                'adresse',
-                'pays_origine',
-                'nationalite',
-                'genre',
-                'role',
-            ]);
+            if (Schema::hasColumn('users', 'prenom')) {
+                $table->dropColumn('prenom');
+            }
+            if (Schema::hasColumn('users', 'telephone')) {
+                $table->dropColumn('telephone');
+            }
+            if (Schema::hasColumn('users', 'genre')) {
+                $table->dropColumn('genre');
+            }
+            if (Schema::hasColumn('users', 'cin')) {
+                $table->dropColumn('cin');
+            }
+            if (Schema::hasColumn('users', 'nationalite')) {
+                $table->dropColumn('nationalite');
+            }
+            if (Schema::hasColumn('users', 'adresse')) {
+                $table->dropColumn('adresse');
+            }
+            if (Schema::hasColumn('users', 'pays_origine')) {
+                $table->dropColumn('pays_origine');
+            }
         });
     }
 };

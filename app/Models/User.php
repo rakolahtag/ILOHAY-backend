@@ -12,11 +12,27 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    public function stagiaire()
+    {
+        return $this->hasOne(Stagiaire::class);
+    }
+
+    public function participant()
+    {
+        return $this->hasOne(Participant::class);
+    }
+
+    public function formateur()
+    {
+        return $this->hasOne(Formateur::class);
+    }
+
+
     /**
      * Les attributs qu’on peut remplir (fillable).
      */
     protected $fillable = [
-        'name',
+        'nom',
         'prenom',
         'cin',
         'telephone',
@@ -27,6 +43,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'photo',
     ];
 
     /**

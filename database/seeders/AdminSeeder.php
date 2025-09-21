@@ -14,7 +14,7 @@ class AdminSeeder extends Seeder
     public function run(): void
     {
         User::create([
-            'name' => 'Super Admin',
+            'nom' => 'Super Admin',
             'prenom' => 'System',
             'email' => 'admin@ilohay.com',
             'password' => Hash::make('Admin@123'), // change-le après premier login
@@ -24,7 +24,7 @@ class AdminSeeder extends Seeder
             'adresse' => 'Antananarivo',
             'pays_origine' => 'Madagascar',
             'nationalite' => 'Malgache',
-            'genre' => 'Homme',
+            'genre' => 'Masculin',
         ]);
     }
 }

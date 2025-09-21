@@ -6,6 +6,7 @@ use App\Http\Controllers\StagiaireController;
 use App\Http\Controllers\ParticipantController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\FormateurController;
 
 // Groupe des routes d'authentification
 Route::prefix('auth')->group(function () {
@@ -26,19 +27,18 @@ Route::prefix('auth')->group(function () {
 
         return response()->json(['status' => 'ok']);
     })->middleware('auth:sanctum'); // sécurité avec token
-
+    
     // Routes protégées par Sanctum (nécessitent un token)
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/me', [AuthController::class, 'me']);
         Route::post('/logout', [AuthController::class, 'logout']);
-        Route::get('/stagiaires', [StagiaireController::class, 'index']);
-        Route::post('/stagiaires', [StagiaireController::class, 'store']);
-        Route::get('/stagiaires/{id}', [StagiaireController::class, 'show']);
-        Route::put('/stagiaires/{id}', [StagiaireController::class, 'update']);
-        Route::delete('/stagiaires/{id}', [StagiaireController::class, 'destroy']);
-        Route::get('/participants', [ParticipantController::class, 'index']);
-        Route::post('/participants', [ParticipantController::class, 'store']);
-        Route::put('/participants/{id}', [ParticipantController::class, 'update']);
-        Route::delete('/participants/{id}', [ParticipantController::class, 'destroy']);
+
+        Route::apiResource('stagiaires', StagiaireController::class);
+        Route::apiResource('participants', ParticipantController::class);
+        Route::apiResource('formateurs', FormateurController::class);
+
+        Route::get('/auth/me', [AuthController::class, 'me']);
+        Route::put('/auth/update-profile', [AuthController::class, 'updateProfile']);
+        Route::post('/auth/update-photo', [AuthController::class, 'updatePhoto']);
     });
 });

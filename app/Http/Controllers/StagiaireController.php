@@ -18,6 +18,7 @@ class StagiaireController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'email' => 'required|email|unique:stagiaires,email',
             'nom' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
@@ -28,7 +29,7 @@ class StagiaireController extends Controller
             'adresse' => 'nullable|string|max:255',
             'pays_origine' => 'nullable|string|max:255',
             'niveau_en_classe' => 'nullable|string|max:255',
-            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'etablissement' => 'nullable|string|max:255',
         ]);
 
         // Gestion upload photo
@@ -57,17 +58,18 @@ class StagiaireController extends Controller
         $stagiaire = Stagiaire::findOrFail($id);
 
         $validated = $request->validate([
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'email' => 'required|email|unique:stagiaires,email,' . $id,
             'nom' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
             'telephone' => 'required|string|max:20',
-            'genre' => 'required|in:masculin,feminin',
+            'genre' => 'required|in:masculin,feminin,autre',
             'cin' => 'required|string|unique:stagiaires,cin,' . $id,
             'nationalite' => 'nullable|string|max:255',
             'adresse' => 'nullable|string|max:255',
             'pays_origine' => 'nullable|string|max:255',
             'niveau_en_classe' => 'nullable|string|max:255',
-            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'etablissement' => 'nullable|string|max:255',
         ]);
 
         // si nouvelle photo envoyée

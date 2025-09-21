@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Participant extends Model
+class Formateur extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'user_id',
-        'entite_origine',
+        'specialite',
     ];
 
     public function user()

@@ -7,17 +7,16 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('stagiaires', function (Blueprint $table) {
+        Schema::create('formateurs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); 
-            $table->string('etablissement');
-            $table->string('niveau_en_classe');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('specialite');
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('stagiaires');
+        Schema::dropIfExists('formateurs');
     }
 };
